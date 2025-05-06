@@ -1,0 +1,278 @@
+{
+    "users": {
+      "USER_AUTH_UID_1": {
+        "firstName": "Amr",
+        "lastName": "Diab",
+        "phoneNumber": "+201001234567",
+        "email": "amr.diab@example.com",
+        "defaultAddressId": "ADDRESS_ID_1_1",
+        "createdAt": "2024-01-01T10:00:00Z",
+        "updatedAt": "2024-01-01T10:00:00Z"
+      },
+      "USER_AUTH_UID_2": {
+        "firstName": "Sherine",
+        "lastName": "Abdelwahab",
+        "phoneNumber": "+201223456789",
+        "email": "sherine.a@example.com",
+        "defaultAddressId": null,
+        "createdAt": "2024-01-02T11:00:00Z",
+        "updatedAt": "2024-01-02T11:00:00Z"
+      }
+    },
+    "categories": {
+      "CAT_ID_FRUITS": {
+        "name": "Fruits & Vegetables",
+        "imageUrl": "gs://your-bucket/categories/fruits_vegetables.png",
+        "sortOrder": 1
+      },
+      "CAT_ID_DAIRY": {
+        "name": "Dairy & Eggs",
+        "imageUrl": "gs://your-bucket/categories/dairy_eggs.png",
+        "sortOrder": 2
+      },
+      "CAT_ID_BAKERY": {
+        "name": "Bakery & Pastries",
+        "imageUrl": "gs://your-bucket/categories/bakery.png",
+        "sortOrder": 3
+      }
+    },
+    "subCategories": {
+      "SUBCAT_ID_APPLES": {
+        "name": "Apples",
+        "categoryId": "CAT_ID_FRUITS",
+        "imageUrl": "gs://your-bucket/subcategories/apples.png",
+        "sortOrder": 1
+      },
+      "SUBCAT_ID_BANANAS": {
+        "name": "Bananas",
+        "categoryId": "CAT_ID_FRUITS",
+        "imageUrl": "gs://your-bucket/subcategories/bananas.png",
+        "sortOrder": 2
+      },
+      "SUBCAT_ID_MILK": {
+        "name": "Milk",
+        "categoryId": "CAT_ID_DAIRY",
+        "imageUrl": "gs://your-bucket/subcategories/milk.png",
+        "sortOrder": 1
+      },
+      "SUBCAT_ID_BREAD": {
+        "name": "Bread",
+        "categoryId": "CAT_ID_BAKERY",
+        "imageUrl": "gs://your-bucket/subcategories/bread.png",
+        "sortOrder": 1
+      }
+    },
+    "products": {
+      "PROD_ID_001": {
+        "name": "Fresh Red Apples",
+        "manufacturer": "Nile Farms",
+        "itemDescription": "Crisp and sweet red apples, perfect for a healthy snack.",
+        "price": 25.50,
+        "oldPrice": null,
+        "isDiscounted": false,
+        "inventoryCount": 200,
+        "imageUrl": "gs://your-bucket/products/red_apples.png",
+        "categoryId": "CAT_ID_FRUITS",
+        "subCategoryId": "SUBCAT_ID_APPLES",
+        "unit": "per kg",
+        "showPointsMultiplier": true,
+        "tags": {
+          "fresh": true,
+          "local": true
+        },
+        "nutritionInfo": {
+           "calories": "95 per medium apple",
+           "fiber": "4g"
+        },
+        "createdAt": "2024-01-01T12:00:00Z",
+        "updatedAt": "2024-01-01T12:00:00Z",
+        "isActive": true
+      },
+      "PROD_ID_002": {
+        "name": "Whole Milk",
+        "manufacturer": "Morning Dew Dairy",
+        "itemDescription": "Fresh full-fat pasteurized cow's milk.",
+        "price": 18.75,
+        "oldPrice": 20.00,
+        "isDiscounted": true,
+        "inventoryCount": 150,
+        "imageUrl": "gs://your-bucket/products/whole_milk.png",
+        "categoryId": "CAT_ID_DAIRY",
+        "subCategoryId": "SUBCAT_ID_MILK",
+        "unit": "1 Liter",
+        "showPointsMultiplier": false,
+        "tags": {
+          "pasteurized": true
+        },
+        "createdAt": "2024-01-02T14:00:00Z",
+        "updatedAt": "2024-01-05T09:30:00Z",
+        "isActive": true
+      },
+      "PROD_ID_003": {
+        "name": "Sourdough Bread",
+        "manufacturer": "Artisan Bakers",
+        "itemDescription": "Naturally leavened sourdough bread with a chewy crust.",
+        "price": 35.00,
+        "oldPrice": null,
+        "isDiscounted": false,
+        "inventoryCount": 50,
+        "imageUrl": "gs://your-bucket/products/sourdough.png",
+        "categoryId": "CAT_ID_BAKERY",
+        "subCategoryId": "SUBCAT_ID_BREAD",
+        "unit": "Loaf (approx. 500g)",
+        "showPointsMultiplier": true,
+        "tags": {
+          "artisan": true,
+          "naturally_leavened": true
+        },
+        "createdAt": "2024-01-03T08:00:00Z",
+        "updatedAt": "2024-01-03T08:00:00Z",
+        "isActive": true
+      }
+    },
+    "wallets": {
+      "USER_AUTH_UID_1": {
+        "currentCredit": 250.00,
+        "points": 1250,
+        "lastTransactionDate": "2024-01-15T12:30:00Z"
+      },
+      "USER_AUTH_UID_2": {
+        "currentCredit": 50.75,
+        "points": 300,
+        "lastTransactionDate": "2024-01-10T18:15:00Z"
+      }
+    },
+    "paymentCards": {
+      "USER_AUTH_UID_1": {
+        "CARD_TOKEN_XYZ123": {
+          "cardNumberLast4": "4242",
+          "cardType": "Visa",
+          "cardHolderName": "Amr Diab",
+          "expirationMonth": 12,
+          "expirationYear": 2026,
+          "paymentGatewayToken": "tok_visa_4242_example",
+          "isDefault": true,
+          "addedDate": "2024-01-01T10:05:00Z"
+        }
+      }
+    },
+    "userAddresses": {
+      "USER_AUTH_UID_1": {
+        "ADDRESS_ID_1_1": {
+          "label": "Home",
+          "addressLine1": "123 Nile Corniche",
+          "city": "Cairo",
+          "area": "Zamalek",
+          "building": "Tower A",
+          "floor": "10",
+          "apartment": "101",
+          "landmark": "Near Marriott Hotel",
+          "phoneNumber": "+201001234567",
+          "isDefault": true,
+          "latitude": 30.06263,
+          "longitude": 31.24967
+        },
+        "ADDRESS_ID_1_2": {
+          "label": "Work",
+          "addressLine1": "456 Business Hub St",
+          "city": "Cairo",
+          "area": "New Cairo",
+          "building": "Office Park B",
+          "floor": "3",
+          "isDefault": false,
+          "latitude": 30.0079,
+          "longitude": 31.4913
+        }
+      }
+    },
+    "favorites": {
+      "USER_AUTH_UID_1": {
+        "PROD_ID_002": true,
+        "PROD_ID_003": true
+      },
+      "USER_AUTH_UID_2": {
+        "PROD_ID_001": true
+      }
+    },
+    "orders": {
+      "ORDER_ID_001": {
+        "userId": "USER_AUTH_UID_1",
+        "items": [
+          {
+            "productId": "PROD_ID_001",
+            "name": "Fresh Red Apples",
+            "priceAtPurchase": 25.50,
+            "quantity": 2,
+            "unit": "per kg",
+            "imageUrl": "gs://your-bucket/products/red_apples.png"
+          },
+          {
+            "productId": "PROD_ID_002",
+            "name": "Whole Milk",
+            "priceAtPurchase": 18.75,
+            "quantity": 1,
+            "unit": "1 Liter",
+            "imageUrl": "gs://your-bucket/products/whole_milk.png"
+          }
+        ],
+        "itemsSubtotal": 69.75,
+        "deliveryFee": 30.00,
+        "serviceFee": 0.00,
+        "discountApplied": 0.00,
+        "grandTotal": 99.75,
+        "orderStatus": "delivered",
+        "paymentMethod": "card_on_file_tok_visa_4242_example",
+        "paymentStatus": "paid",
+        "deliveryAddress": {
+          "label": "Home",
+          "addressLine1": "123 Nile Corniche",
+          "city": "Cairo",
+          "area": "Zamalek"
+        },
+        "orderTimestamp": "2024-01-10T14:30:00Z",
+        "deliveryTimestamp": "2024-01-10T15:30:00Z",
+        "scheduledDeliverySlot": "2024-01-10 15:00-16:00",
+        "deliveryNotes": "Please call upon arrival."
+      }
+    },
+    "banners": {
+      "BANNER_ID_1": {
+        "imageUrl": "gs://your-bucket/banners/promo_1.png",
+        "actionType": "category",
+        "actionValue": "CAT_ID_DAIRY",
+        "title": "Fresh Dairy Deals!",
+        "description": "Up to 20% off on selected milk and cheese.",
+        "sortOrder": 1,
+        "isActive": true,
+        "startDate": "2024-01-01T00:00:00Z",
+        "endDate": "2024-01-31T23:59:59Z"
+      },
+      "BANNER_ID_2": {
+        "imageUrl": "gs://your-bucket/banners/new_arrivals_fruits.png",
+        "actionType": "subCategory",
+        "actionValue": "SUBCAT_ID_APPLES",
+        "title": "New Season Apples",
+        "description": "Discover the freshest apples of the season.",
+        "sortOrder": 2,
+        "isActive": true
+      }
+    },
+    "spotlightItems": {
+       "SPOTLIGHT_ID_1": {
+          "title": "Espresso Capsules",
+          "imageUrl": "gs://your-bucket/spotlight/espresso_caps.png",
+          "actionType": "search_query",
+          "actionValue": "espresso capsules",
+          "sortOrder": 1,
+          "isActive": true
+       },
+       "SPOTLIGHT_ID_2": {
+          "title": "Neat Home Essentials",
+          "imageUrl": "gs://your-bucket/spotlight/home_essentials.png",
+          "actionType": "category",
+          "actionValue": "CAT_ID_HOMECARE",
+          "sortOrder": 2,
+          "isActive": true
+       }
+    }
+  }

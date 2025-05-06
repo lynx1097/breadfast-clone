@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "560307750123",
+    "firebase_url": "https://breadfast-giu-default-rtdb.firebaseio.com",
+    "project_id": "breadfast-giu",
+    "storage_bucket": "breadfast-giu.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:560307750123:android:e6bdbfe7c2d95ad68c6aae",
+        "android_client_info": {
+          "package_name": "com.example.breadfast"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgGTHHUlmRYRvVtyIWddUoxB8aXOfGVVY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
