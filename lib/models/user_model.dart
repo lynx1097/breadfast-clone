@@ -4,8 +4,10 @@ class UserModel {
   final String lastName;
   final String phoneNumber;
   final String email;
-  // Add other fields like defaultAddressId, createdAt, updatedAt as needed
-  // String? hashedPassword; // For storing hashed password
+  final String? password; // Changed from hashedPassword
+  final String? createdAt;
+  final String? updatedAt;
+  final String? defaultAddressId;
 
   UserModel({
     required this.uid,
@@ -13,17 +15,23 @@ class UserModel {
     required this.lastName,
     required this.phoneNumber,
     required this.email,
-    // this.hashedPassword,
+    this.password, // Changed
+    this.createdAt,
+    this.updatedAt,
+    this.defaultAddressId,
   });
 
   factory UserModel.fromMap(Map<String, dynamic> map, String uid) {
     return UserModel(
-      uid: uid, // map['uid'] usually the key, passed separately
+      uid: uid, 
       firstName: map['firstName'] as String,
       lastName: map['lastName'] as String,
       phoneNumber: map['phoneNumber'] as String,
-      email: map['email'] as String,
-      // hashedPassword: map['hashedPassword'] as String?,
+      email: map['email'] as String? ?? '', // Handle if email is null in DB
+      password: map['password'] as String?, // Changed from hashedPassword
+      createdAt: map['createdAt'] as String?,
+      updatedAt: map['updatedAt'] as String?,
+      defaultAddressId: map['defaultAddressId'] as String?,
     );
   }
 
@@ -33,9 +41,10 @@ class UserModel {
       'lastName': lastName,
       'phoneNumber': phoneNumber,
       'email': email,
-      // 'hashedPassword': hashedPassword,
-      // Add other fields for storage like createdAt, updatedAt
-      // 'createdAt': FieldValue.serverTimestamp(), // Example for Firestore
+      if (password != null) 'password': password, // Changed from hashedPassword
+      if (createdAt != null) 'createdAt': createdAt,
+      if (updatedAt != null) 'updatedAt': updatedAt,
+      if (defaultAddressId != null) 'defaultAddressId': defaultAddressId,
     };
   }
 } 

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:breadfast/services/cart_service.dart';
 import 'package:breadfast/app_shell.dart'; // To navigate back to home/AppShell
 import 'package:breadfast/widgets/product_card.dart'; // For People also buy section later
+import 'package:breadfast/widgets/product_details_sheet.dart'; // Import the sheet
 import 'package:breadfast/models/product_model.dart'; // Import Product model
 
 class CartScreen extends StatelessWidget {
@@ -128,19 +129,20 @@ class CartScreen extends StatelessWidget {
   Widget _buildCartWithItemsLayout(BuildContext context, CartService cartService) {
     final cartItems = cartService.items.values.toList();
 
-    // For "People also buy" - using placeholder data similar to HomeScreen for now
-    // This screen will need to be StatefulWidget to manage favorite state for these if needed
     final List<Map<String, dynamic>> peopleAlsoBuyData = List.generate(
-      5, // Show 5 items
+      5,
       (index) => {
         'id': 'pab$index',
         'name': 'Also Buy Item ${index + 1}',
-        'imageUrl': 'placeholder_pab_$index',
-        'currentPrice': (index + 1) * 30.25,
+        'imageUrl': 'https://via.placeholder.com/150/D2B48C/FFFFFF?text=Product+${index+1}', // Placeholder image URL
+        'price': (index + 1) * 30.25,
         'oldPrice': null,
         'isDiscounted': false,
         'showPointsMultiplier': (index % 2 != 0),
-        'isFavorite': false, // Static favorite state for now
+        'isFavorite': false,
+        'inventoryCount': 10, // Assuming in stock for placeholder
+        'itemDescription': 'This is a placeholder description for also buy item ${index + 1}.',
+        'manufacturer': 'Breadfast',
       }
     );
 
@@ -182,30 +184,28 @@ class CartScreen extends StatelessWidget {
                     itemCount: peopleAlsoBuyData.length,
                     itemBuilder: (context, index) {
                       final pItem = peopleAlsoBuyData[index];
-                      // Create a Product instance from pItem data
                       final product = Product(
                         id: pItem['id'] as String,
                         name: pItem['name'] as String,
                         imageUrl: pItem['imageUrl'] as String,
-                        price: pItem['currentPrice'] as double, // map to 'price'
+                        price: pItem['price'] as double,
                         oldPrice: pItem['oldPrice'] as double?,
                         isDiscounted: pItem['isDiscounted'] as bool,
                         showPointsMultiplier: pItem['showPointsMultiplier'] as bool,
                         isFavorite: pItem['isFavorite'] as bool,
-                        // Add other fields if ProductCard or Product model expects them and they are in pItem
-                        // For example, manufacturer, itemDescription, etc. are null if not provided.
+                        inventoryCount: pItem['inventoryCount'] as int?,
+                        itemDescription: pItem['itemDescription'] as String?,
+                        manufacturer: pItem['manufacturer'] as String?,
                       );
                       return Padding(
                         padding: const EdgeInsets.only(right: 10.0),
                         child: ProductCard(
-                          product: product, // Pass the Product object
+                          product: product,
                           onFavoriteToggle: () {
-                            // TODO: Implement favorite toggle if this screen becomes stateful 
-                            // and if these items are meant to be interactive.
-                            // For now, placeholder action. This might require converting
-                            // CartScreen to StatefulWidget or managing this state differently.
                             print('Fav toggle for PAB: ${product.name}');
+                            // TODO: Make CartScreen stateful to manage this state
                           },
+                          onTap: () => showProductDetailsSheet(context, product), // Added onTap
                         ),
                       );
                     },

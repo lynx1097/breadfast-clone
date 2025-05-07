@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart'; // Import Provider
 import 'package:breadfast/services/cart_service.dart'; // Import CartService
 import 'package:breadfast/widgets/product_card.dart'; // Import new ProductCard
+import 'package:breadfast/widgets/product_details_sheet.dart'; // Import the sheet
 import 'cart_screen.dart'; // Import CartScreen for navigation
 import 'package:breadfast/models/product_model.dart';
 import 'package:breadfast/services/database_service.dart';
@@ -118,8 +119,9 @@ class _TopPicksScreenState extends State<TopPicksScreen> { // State class
                 itemBuilder: (context, index) {
                   final product = products[index];
                   return ProductCard(
-                    product: product, // Pass the Product object
+                    product: product,
                     onFavoriteToggle: () => _toggleFavoriteStatus(product),
+                    onTap: () => showProductDetailsSheet(context, product),
                   );
                 },
               );

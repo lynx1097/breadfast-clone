@@ -3,6 +3,8 @@ import 'package:breadfast/models/product_model.dart';
 import 'package:breadfast/models/banner_item_model.dart';
 import 'package:breadfast/models/spotlight_item_model.dart';
 import 'package:breadfast/models/user_model.dart';
+import 'package:breadfast/models/category_model.dart';
+import 'package:breadfast/models/sub_category_model.dart';
 // Import Category model if you plan to add category fetching methods soon
 // import 'package:breadfast/models/category_model.dart';
 
@@ -116,6 +118,97 @@ class DatabaseService {
       print('Error creating user: $e');
       throw e; // Re-throw to handle in UI
     }
+  }
+
+  Future<List<CategoryModel>> getCategories() async {
+    final snapshot = await _db.ref('categories').orderByChild('sortOrder').get();
+    if (snapshot.exists && snapshot.value != null) {
+      final Map<String, dynamic> categoriesMap = Map<String, dynamic>.from(snapshot.value as Map);
+      List<CategoryModel> categories = [];
+      categoriesMap.forEach((key, value) {
+        final categoryData = Map<String, dynamic>.from(value as Map);
+        // Assuming all categories fetched are active/relevant, no 'isActive' check in DB structure for categories
+        categories.add(CategoryModel.fromJson(key, categoryData));
+      });
+      // Categories are already ordered by sortOrder from Firebase query
+      return categories;
+    }
+    return [];
+  }
+
+  Future<Map<String, dynamic>?> getUserByUid(String uid) async {
+    try {
+      final snapshot = await _db.ref('users/$uid').get();
+      if (snapshot.exists && snapshot.value != null) {
+        final userData = Map<String, dynamic>.from(snapshot.value as Map);
+        // UID is already known, but you could add it to the map if consistent with getUserByPhoneNumber
+        // userData['uid'] = uid; 
+        return userData;
+      }
+      return null;
+    } catch (e) {
+      print('Error fetching user by UID: $e');
+      return null;
+    }
+  }
+
+  Future<List<Product>> searchProducts(String query) async {
+    if (query.isEmpty) {
+      return []; // Return empty list if query is empty
+    }
+    // Fetch all active products first
+    final List<Product> allActiveProducts = await getProducts(); 
+    
+    final String lowercaseQuery = query.toLowerCase();
+    
+    return allActiveProducts.where((product) {
+      final bool nameMatches = product.name.toLowerCase().contains(lowercaseQuery);
+      final bool descriptionMatches = product.itemDescription?.toLowerCase().contains(lowercaseQuery) ?? false;
+      return nameMatches || descriptionMatches;
+    }).toList();
+  }
+
+  Future<List<SubCategoryModel>> getSubCategories(String categoryId) async {
+    final snapshot = await _db
+        .ref('subCategories')
+        .orderByChild('categoryId')
+        .equalTo(categoryId)
+        .get();
+    if (snapshot.exists && snapshot.value != null) {
+      final Map<String, dynamic> subCategoriesMap = Map<String, dynamic>.from(snapshot.value as Map);
+      List<SubCategoryModel> subCategories = [];
+      subCategoriesMap.forEach((key, value) {
+        final subCategoryData = Map<String, dynamic>.from(value as Map);
+        // Assuming subCategoryData includes 'categoryId' and 'sortOrder' for filtering and sorting
+        subCategories.add(SubCategoryModel.fromJson(key, subCategoryData));
+      });
+      // Sort by sortOrder if not already handled by Firebase (Firebase sorts by key then by orderByChild)
+      subCategories.sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
+      return subCategories;
+    }
+    return [];
+  }
+
+  Future<List<Product>> getProductsBySubCategory(String subCategoryId) async {
+    final snapshot = await _db
+        .ref('products')
+        .orderByChild('subCategoryId')
+        .equalTo(subCategoryId)
+        .get();
+    if (snapshot.exists && snapshot.value != null) {
+      final Map<String, dynamic> productsMap = Map<String, dynamic>.from(snapshot.value as Map);
+      List<Product> products = [];
+      productsMap.forEach((key, value) {
+        final productData = Map<String, dynamic>.from(value as Map);
+        if (productData['isActive'] == true) { // Ensure product is active
+          products.add(Product.fromJson(key, productData));
+        }
+      });
+      // Optionally, sort products by a specific field if needed (e.g., name, price)
+      // products.sort((a,b) => a.name.compareTo(b.name));
+      return products;
+    }
+    return [];
   }
 
   // TODO: Add methods for fetching categories, subcategories, user-specific data, etc.

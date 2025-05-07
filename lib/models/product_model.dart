@@ -18,6 +18,7 @@ class Product {
   final String? updatedAt;
   final bool? isActive;
   bool isFavorite; // Locally managed for now, will sync with Firebase later
+  final bool isNew; // Added for NEW chip
 
   Product({
     required this.id,
@@ -38,7 +39,8 @@ class Product {
     this.createdAt,
     this.updatedAt,
     this.isActive,
-    this.isFavorite = false, // Default to not favorite
+    this.isFavorite = false,
+    this.isNew = false, // Default to false
   });
 
   factory Product.fromJson(String id, Map<String, dynamic> json) {
@@ -61,6 +63,7 @@ class Product {
       createdAt: json['createdAt'] as String?,
       updatedAt: json['updatedAt'] as String?,
       isActive: json['isActive'] as bool?,
+      isNew: json['isNew'] as bool? ?? false, // Added isNew from JSON
       // isFavorite will be handled separately, not directly from product node in Firebase initially
     );
   }

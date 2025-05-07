@@ -4,13 +4,18 @@ import 'package:provider/provider.dart'; // Import Provider
 import 'package:breadfast/services/cart_service.dart'; // Import CartService
 import 'top_picks_screen.dart'; // Import the new screen
 import 'package:breadfast/widgets/product_card.dart'; // Import new ProductCard
+import 'package:breadfast/widgets/product_details_sheet.dart'; // Import the sheet
 import 'package:breadfast/models/banner_item_model.dart';
 import 'package:breadfast/models/product_model.dart';
 import 'package:breadfast/models/spotlight_item_model.dart';
+import 'package:breadfast/models/category_model.dart'; // Import Category model
 import 'package:breadfast/services/database_service.dart';
+import 'package:breadfast/services/auth_service.dart';
+import 'package:breadfast/screens/select_country_screen.dart';
+import 'package:breadfast/screens/category_screen.dart'; // Import CategoryScreen
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({super.key});
+  const HomeScreen({super.key}); // Added const
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -18,19 +23,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final DatabaseService _dbService = DatabaseService();
+  final AuthService _authService = AuthService(); // Add AuthService instance
   late Future<List<BannerItem>> _bannersFuture;
   late Future<List<SpotlightItem>> _spotlightItemsFuture;
   late Future<List<Product>> _topPicksFuture;
-
-  // Placeholder data for Explore Breadfast categories
-  final List<Map<String, dynamic>> exploreCategoriesData = List.generate(
-    27, // 3 columns * 9 rows
-    (index) => {
-      'title': 'Category ${index + 1}',
-      'color': Colors.primaries[index % Colors.primaries.length].withOpacity(0.1), // Cycle through primary colors with opacity
-      'icon': Icons.category_outlined, // Placeholder icon
-    }
-  );
+  late Future<List<CategoryModel>> _categoriesFuture; // Changed to CategoryModel
 
   @override
   void initState() {
@@ -42,6 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _bannersFuture = _dbService.getBanners();
     _spotlightItemsFuture = _dbService.getSpotlightItems();
     _topPicksFuture = _dbService.getProducts(limit: 10); // Fetch 10 products for "Top picks"
+    _categoriesFuture = _dbService.getCategories(); // Fetch categories
   }
 
   // Function to handle favorite toggle (will need adjustment for Firebase later)
@@ -53,6 +51,16 @@ class _HomeScreenState extends State<HomeScreen> {
       // For now, this only changes the model state. A more robust update
       // would involve re-fetching or updating the state that FutureBuilder uses.
     });
+  }
+
+  Future<void> _logout() async {
+    await _authService.logoutUserSession();
+    if (!mounted) return;
+    // Navigate to the initial screen for non-logged-in users
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => const SelectCountryScreen()), 
+      (Route<dynamic> route) => false,
+    );
   }
 
   @override
@@ -223,7 +231,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       // If SpotlightCardItem needs refactoring to take SpotlightItem model, that's a later step.
                       // For now, creating a placeholder display:
                       return SpotlightCardItem(
-                        title: item.title,
                         imageUrl: item.imageUrl,
                       );
                     },
@@ -298,8 +305,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemBuilder: (context, index) {
                       final product = products[index];
                       return ProductCard(
-                        product: product, // Pass the whole product object
+                        product: product,
                         onFavoriteToggle: () => _toggleFavoriteStatus(product),
+                        onTap: () => showProductDetailsSheet(context, product),
                       );
                     },
                   );
@@ -322,28 +330,51 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0), // Padding around the grid
-            child: GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: exploreCategoriesData.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                crossAxisSpacing: 10.0,
-                mainAxisSpacing: 10.0,
-                childAspectRatio: 1 / 1.2, // Width / Height ratio (making them slightly taller)
-              ),
-              itemBuilder: (context, index) {
-                final category = exploreCategoriesData[index];
-                return CategoryCardItem(
-                  title: category['title'] as String,
-                  color: category['color'] as Color,
-                  icon: category['icon'] as IconData,
-                );
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: FutureBuilder<List<CategoryModel>>(
+              future: _categoriesFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('No categories found'));
+                } else {
+                  final categories = snapshot.data!;
+                  return GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: categories.length,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 10.0,
+                      mainAxisSpacing: 10.0,
+                      childAspectRatio: 1 / 1.2, 
+                    ),
+                    itemBuilder: (context, index) {
+                      final category = categories[index];
+                      return InkWell( // Wrap CategoryCardItem with InkWell for onTap
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => CategoryScreen(category: category),
+                            ),
+                          );
+                        },
+                        child: CategoryCardItem(
+                          categoryName: category.name,
+                          categoryImageUrl: category.imageUrl,
+                        ),
+                      );
+                    },
+                  );
+                }
               },
             ),
           ),
-          const SizedBox(height: 24), // Padding at the bottom of the list
+          const SizedBox(height: 24), 
           // --- End of Explore Breadfast Section ---
         ],
       ),
@@ -376,17 +407,15 @@ class PlaceholderBannerItem extends StatelessWidget {
 
 // Widget for Spotlight card items
 class SpotlightCardItem extends StatelessWidget {
-  final String title;
+  // final String title; // Removed title
   final String imageUrl;
   final Color? color; // Optional fallback color
-  // final String text; // text is effectively replaced by title
 
   const SpotlightCardItem({
     super.key,
-    required this.title,
+    // required this.title, // Removed title
     required this.imageUrl,
-    this.color, // No longer required, can be used as fallback
-    // required this.text, // Removed
+    this.color, 
   });
 
   @override
@@ -396,60 +425,31 @@ class SpotlightCardItem extends StatelessWidget {
       margin: const EdgeInsets.only(right: 10.0), // Spacing between cards
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8.0), // Rounded corners for spotlight cards
-        child: Stack(
-          fit: StackFit.expand, // Make Stack fill the Container
-          children: [
-            // Background Image
-            Image.network(
-              imageUrl,
-              fit: BoxFit.cover,
-              color: color ?? Colors.grey.shade200, // Use provided color as overlay or fallback background
-              colorBlendMode: BlendMode.multiply, // Example, adjust as needed or remove if color is just for fallback
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  color: color ?? Colors.grey.shade300, // Fallback color if image fails
-                  child: Center(
-                    child: Icon(Icons.broken_image, color: Colors.grey.shade600, size: 40),
-                  ),
-                );
-              },
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress == null) return child;
-                return Container(
-                  color: color ?? Colors.grey.shade200,
-                  child: Center(
-                    child: CircularProgressIndicator(
-                      value: loadingProgress.expectedTotalBytes != null
-                          ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                          : null,
-                    ),
-                  ),
-                );
-              },
-            ),
-            // Dark overlay for better text visibility (optional)
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Colors.black.withOpacity(0.6), Colors.transparent, Colors.black.withOpacity(0.6)],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  stops: [0.0, 0.5, 1.0]
+        child: Image.network( // Directly use Image.network
+          imageUrl,
+          fit: BoxFit.cover,
+          // Optional: Add errorBuilder and loadingBuilder for Image.network
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              color: color ?? Colors.grey.shade300, // Fallback color if image fails
+              child: Center(
+                child: Icon(Icons.broken_image, color: Colors.grey.shade600, size: 40),
+              ),
+            );
+          },
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return Container(
+              color: color ?? Colors.grey.shade200, // Placeholder background while loading
+              child: Center(
+                child: CircularProgressIndicator(
+                  value: loadingProgress.expectedTotalBytes != null
+                      ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                      : null,
                 ),
               ),
-            ),
-            // Title Text
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0), // Padding for the title
-                child: Text(
-                  title, // Use the title property
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
-                ),
-              ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );
@@ -458,48 +458,72 @@ class SpotlightCardItem extends StatelessWidget {
 
 // Widget for Category Card items
 class CategoryCardItem extends StatelessWidget {
-  final String title;
-  final Color color;
-  final IconData icon;
+  final String categoryName;
+  final String categoryImageUrl;
 
   const CategoryCardItem({
     super.key,
-    required this.title,
-    required this.color,
-    required this.icon,
+    required this.categoryName,
+    required this.categoryImageUrl,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: color, // Background color from data
+        color: Colors.white, // Changed from category.color
         borderRadius: BorderRadius.circular(12.0),
+        border: Border.all(color: Colors.grey.shade200, width: 1.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 3,
+            offset: const Offset(0, 1),
+          ),
+        ],
       ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start, // Align items to the start (top)
-          crossAxisAlignment: CrossAxisAlignment.center, // Center items horizontally
+          mainAxisAlignment: MainAxisAlignment.center, // Center content vertically
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Expanded(
+              flex: 2, // Give more space to image
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.0), // Rounded corners for image
+                child: Image.network(
+                  categoryImageUrl,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => 
+                    Icon(Icons.category_outlined, color: Colors.grey.shade400, size: 40),
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Center(
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2.0,
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
+                            : null,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
             Text(
-              title,
+              categoryName,
               textAlign: TextAlign.center,
               style: TextStyle(
-                fontSize: 13, // Smaller font for category title
-                fontWeight: FontWeight.w600, // Semibold
-                color: Colors.black87, // Darker text for better readability on light backgrounds
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
               ),
-              maxLines: 2, // Allow for two lines for longer titles
+              maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
-            const Spacer(), // Pushes icon towards the center/bottom depending on available space
-            Icon(
-              icon,
-              size: 40, // Adjust icon size as needed
-              color: Colors.black54, // Icon color
-            ),
-            const Spacer(), // Provides some space if needed, or helps center icon if only one spacer is used before it
           ],
         ),
       ),
