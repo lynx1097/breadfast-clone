@@ -13,6 +13,7 @@ import 'package:breadfast/services/database_service.dart';
 import 'package:breadfast/services/auth_service.dart';
 import 'package:breadfast/screens/select_country_screen.dart';
 import 'package:breadfast/screens/category_screen.dart'; // Import CategoryScreen
+import 'package:breadfast/widgets/app_image.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key}); // Added const
@@ -157,25 +158,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             borderRadius: BorderRadius.circular(10.0),
                           ),
                           // child: item, // OLD: item was a PlaceholderBannerItem
-                          child: ClipRRect( // Ensure image respects border radius
+                          child: ClipRRect(
                             borderRadius: BorderRadius.circular(10.0),
-                            child: Image.network( // Using Image.network
-                              banner.imageUrl,
-                              fit: BoxFit.cover,
-                              // Optional: Add errorBuilder and loadingBuilder for Image.network
-                              errorBuilder: (context, error, stackTrace) => 
-                                const Center(child: Icon(Icons.broken_image, color: Colors.grey, size: 40)),
-                              loadingBuilder: (context, child, loadingProgress) {
-                                if (loadingProgress == null) return child;
-                                return Center(
-                                  child: CircularProgressIndicator(
-                                    value: loadingProgress.expectedTotalBytes != null
-                                        ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                                        : null,
-                                  ),
-                                );
-                              },
-                            ),
+                            child: AppImage(url: banner.imageUrl, fit: BoxFit.cover),
                           ),
                         );
                       },
@@ -424,33 +409,8 @@ class SpotlightCardItem extends StatelessWidget {
       width: 270, // Width of the spotlight card
       margin: const EdgeInsets.only(right: 10.0), // Spacing between cards
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(8.0), // Rounded corners for spotlight cards
-        child: Image.network( // Directly use Image.network
-          imageUrl,
-          fit: BoxFit.cover,
-          // Optional: Add errorBuilder and loadingBuilder for Image.network
-          errorBuilder: (context, error, stackTrace) {
-            return Container(
-              color: color ?? Colors.grey.shade300, // Fallback color if image fails
-              child: Center(
-                child: Icon(Icons.broken_image, color: Colors.grey.shade600, size: 40),
-              ),
-            );
-          },
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) return child;
-            return Container(
-              color: color ?? Colors.grey.shade200, // Placeholder background while loading
-              child: Center(
-                child: CircularProgressIndicator(
-                  value: loadingProgress.expectedTotalBytes != null
-                      ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                      : null,
-                ),
-              ),
-            );
-          },
-        ),
+        borderRadius: BorderRadius.circular(8.0),
+        child: AppImage(url: imageUrl, fit: BoxFit.cover),
       ),
     );
   }
@@ -493,23 +453,7 @@ class CategoryCardItem extends StatelessWidget {
               flex: 2, // Give more space to image
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8.0), // Rounded corners for image
-                child: Image.network(
-                  categoryImageUrl,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => 
-                    Icon(Icons.category_outlined, color: Colors.grey.shade400, size: 40),
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Center(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2.0,
-                        value: loadingProgress.expectedTotalBytes != null
-                            ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                            : null,
-                      ),
-                    );
-                  },
-                ),
+                child: AppImage(url: categoryImageUrl, fit: BoxFit.cover),
               ),
             ),
             const SizedBox(height: 8),

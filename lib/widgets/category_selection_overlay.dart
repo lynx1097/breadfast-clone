@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:breadfast/models/category_model.dart';
 import 'package:breadfast/services/database_service.dart';
+import 'package:breadfast/widgets/app_image.dart';
 
 class CategorySelectionOverlay extends StatefulWidget {
   final Function(CategoryModel) onCategorySelected;
@@ -112,23 +113,7 @@ class _CategorySelectionOverlayState extends State<CategorySelectionOverlay> {
                               flex: 2,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(8.0),
-                                child: Image.network(
-                                  category.imageUrl,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      Icon(Icons.category_outlined, color: Colors.grey.shade400, size: 30),
-                                  loadingBuilder: (context, child, loadingProgress) {
-                                    if (loadingProgress == null) return child;
-                                    return Center(
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2.0,
-                                        value: loadingProgress.expectedTotalBytes != null
-                                            ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                                            : null,
-                                      ),
-                                    );
-                                  },
-                                ),
+                                child: AppImage(url: category.imageUrl, fit: BoxFit.cover),
                               ),
                             ),
                             const SizedBox(height: 8),

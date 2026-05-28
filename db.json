@@ -22,17 +22,17 @@
     "categories": {
       "CAT_ID_FRUITS": {
         "name": "Fruits & Vegetables",
-        "imageUrl": "gs://your-bucket/categories/fruits_vegetables.png",
+        "imageUrl": "assets/categories/fruits_vegetables.png",
         "sortOrder": 1
       },
       "CAT_ID_DAIRY": {
         "name": "Dairy & Eggs",
-        "imageUrl": "gs://your-bucket/categories/dairy_eggs.png",
+        "imageUrl": "assets/categories/dairy_eggs.png",
         "sortOrder": 2
       },
       "CAT_ID_BAKERY": {
         "name": "Bakery & Pastries",
-        "imageUrl": "gs://your-bucket/categories/bakery.png",
+        "imageUrl": "assets/categories/bakery.png",
         "sortOrder": 3
       }
     },
@@ -40,25 +40,25 @@
       "SUBCAT_ID_APPLES": {
         "name": "Apples",
         "categoryId": "CAT_ID_FRUITS",
-        "imageUrl": "gs://your-bucket/subcategories/apples.png",
+        "imageUrl": "assets/categories/fruits_vegetables.png",
         "sortOrder": 1
       },
       "SUBCAT_ID_BANANAS": {
         "name": "Bananas",
         "categoryId": "CAT_ID_FRUITS",
-        "imageUrl": "gs://your-bucket/subcategories/bananas.png",
+        "imageUrl": "assets/categories/fruits_vegetables.png",
         "sortOrder": 2
       },
       "SUBCAT_ID_MILK": {
         "name": "Milk",
         "categoryId": "CAT_ID_DAIRY",
-        "imageUrl": "gs://your-bucket/subcategories/milk.png",
+        "imageUrl": "assets/categories/dairy_eggs.png",
         "sortOrder": 1
       },
       "SUBCAT_ID_BREAD": {
         "name": "Bread",
         "categoryId": "CAT_ID_BAKERY",
-        "imageUrl": "gs://your-bucket/subcategories/bread.png",
+        "imageUrl": "assets/categories/bakery.png",
         "sortOrder": 1
       }
     },
@@ -71,7 +71,7 @@
         "oldPrice": null,
         "isDiscounted": false,
         "inventoryCount": 200,
-        "imageUrl": "gs://your-bucket/products/red_apples.png",
+        "imageUrl": "assets/products/red_apples.png",
         "categoryId": "CAT_ID_FRUITS",
         "subCategoryId": "SUBCAT_ID_APPLES",
         "unit": "per kg",
@@ -96,7 +96,7 @@
         "oldPrice": 20.00,
         "isDiscounted": true,
         "inventoryCount": 150,
-        "imageUrl": "gs://your-bucket/products/whole_milk.png",
+        "imageUrl": "assets/products/whole_milk.png",
         "categoryId": "CAT_ID_DAIRY",
         "subCategoryId": "SUBCAT_ID_MILK",
         "unit": "1 Liter",
@@ -116,7 +116,7 @@
         "oldPrice": null,
         "isDiscounted": false,
         "inventoryCount": 50,
-        "imageUrl": "gs://your-bucket/products/sourdough.png",
+        "imageUrl": "assets/products/sourdough.png",
         "categoryId": "CAT_ID_BAKERY",
         "subCategoryId": "SUBCAT_ID_BREAD",
         "unit": "Loaf (approx. 500g)",
@@ -204,7 +204,7 @@
             "priceAtPurchase": 25.50,
             "quantity": 2,
             "unit": "per kg",
-            "imageUrl": "gs://your-bucket/products/red_apples.png"
+            "imageUrl": "assets/products/red_apples.png"
           },
           {
             "productId": "PROD_ID_002",
@@ -212,7 +212,7 @@
             "priceAtPurchase": 18.75,
             "quantity": 1,
             "unit": "1 Liter",
-            "imageUrl": "gs://your-bucket/products/whole_milk.png"
+            "imageUrl": "assets/products/whole_milk.png"
           }
         ],
         "itemsSubtotal": 69.75,
@@ -237,7 +237,7 @@
     },
     "banners": {
       "BANNER_ID_1": {
-        "imageUrl": "gs://your-bucket/banners/promo_1.png",
+        "imageUrl": "assets/banners/promo_1.png",
         "actionType": "category",
         "actionValue": "CAT_ID_DAIRY",
         "title": "Fresh Dairy Deals!",
@@ -248,7 +248,7 @@
         "endDate": "2024-01-31T23:59:59Z"
       },
       "BANNER_ID_2": {
-        "imageUrl": "gs://your-bucket/banners/new_arrivals_fruits.png",
+        "imageUrl": "assets/banners/new_arrivals_fruits.png",
         "actionType": "subCategory",
         "actionValue": "SUBCAT_ID_APPLES",
         "title": "New Season Apples",
@@ -260,7 +260,7 @@
     "spotlightItems": {
        "SPOTLIGHT_ID_1": {
           "title": "Espresso Capsules",
-          "imageUrl": "gs://your-bucket/spotlight/espresso_caps.png",
+          "imageUrl": "assets/spotlight/espresso_caps.png",
           "actionType": "search_query",
           "actionValue": "espresso capsules",
           "sortOrder": 1,
@@ -268,7 +268,7 @@
        },
        "SPOTLIGHT_ID_2": {
           "title": "Neat Home Essentials",
-          "imageUrl": "gs://your-bucket/spotlight/home_essentials.png",
+          "imageUrl": "assets/spotlight/home_essentials.png",
           "actionType": "category",
           "actionValue": "CAT_ID_HOMECARE",
           "sortOrder": 2,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:breadfast/models/product_model.dart';
 import 'package:breadfast/services/cart_service.dart';
+import 'package:breadfast/widgets/app_image.dart';
 // Import AppShell or a way to get the cart icon with badge if needed directly
 // For simplicity, we might use a simple cart icon first and enhance later.
 
@@ -124,16 +125,7 @@ class _ProductDetailsSheetState extends State<ProductDetailsSheet> {
                 Center(
                   child: SizedBox(
                     height: 200, // Adjust as needed
-                    child: Image.network(
-                      widget.product.imageUrl,
-                      fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) =>
-                          const Center(child: Icon(Icons.broken_image, size: 60, color: Colors.grey)),
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return const Center(child: CircularProgressIndicator());
-                      },
-                    ),
+                    child: AppImage(url: widget.product.imageUrl, fit: BoxFit.contain),
                   ),
                 ),
                 const SizedBox(height: 20),

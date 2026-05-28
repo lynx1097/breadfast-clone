@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:breadfast/services/cart_service.dart';
 import 'package:breadfast/models/product_model.dart';
 import 'package:breadfast/widgets/product_details_sheet.dart';
+import 'package:breadfast/widgets/app_image.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -70,22 +71,7 @@ class ProductCard extends StatelessWidget {
                   flex: 3,
                   child: ClipRRect(
                     borderRadius: const BorderRadius.vertical(top: Radius.circular(7.0)),
-                    child: Image.network(
-                      product.imageUrl,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                        const Center(child: Icon(Icons.broken_image, color: Colors.grey, size: 40)),
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Center(
-                          child: CircularProgressIndicator(
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!
-                                : null,
-                          ),
-                        );
-                      },
-                    ),
+                    child: AppImage(url: product.imageUrl, fit: BoxFit.cover),
                   ),
                 ),
                 Padding(
