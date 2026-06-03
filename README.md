@@ -40,10 +40,10 @@ Every screen, layout, animation, color, typography choice, and interaction was r
     <td align="center"><b>Home Feed</b></td>
   </tr>
   <tr>
-    <td><img src="screen-shots/Screenshot_1779993670.png" width="180"/></td>
-    <td><img src="screen-shots/Screenshot_1779993708.png" width="180"/></td>
-    <td><img src="screen-shots/Screenshot_1779993734.png" width="180"/></td>
-    <td><img src="screen-shots/Screenshot_1779993751.png" width="180"/></td>
+    <td><img src="/screenshots/Screenshot_1779993670.png" width="180"/></td>
+    <td><img src="/screenshots/Screenshot_1779993708.png" width="180"/></td>
+    <td><img src="/screenshots/Screenshot_1779993734.png" width="180"/></td>
+    <td><img src="/screenshots/Screenshot_1779993751.png" width="180"/></td>
   </tr>
   <tr>
     <td align="center"><b>Product Detail Sheet</b></td>
@@ -52,10 +52,10 @@ Every screen, layout, animation, color, typography choice, and interaction was r
     <td align="center"><b>Search</b></td>
   </tr>
   <tr>
-    <td><img src="screen-shots/Screenshot_1779993780.png" width="180"/></td>
-    <td><img src="screen-shots/Screenshot_1779993796.png" width="180"/></td>
-    <td><img src="screen-shots/Screenshot_1779993802.png" width="180"/></td>
-    <td><img src="screen-shots/Screenshot_1779993864.png" width="180"/></td>
+    <td><img src="/screenshots/Screenshot_1779993780.png" width="180"/></td>
+    <td><img src="/screenshots/Screenshot_1779993796.png" width="180"/></td>
+    <td><img src="/screenshots/Screenshot_1779993802.png" width="180"/></td>
+    <td><img src="/screenshots/Screenshot_1779993864.png" width="180"/></td>
   </tr>
   <tr>
     <td align="center"><b>Cart</b></td>
@@ -64,9 +64,9 @@ Every screen, layout, animation, color, typography choice, and interaction was r
     <td></td>
   </tr>
   <tr>
-    <td><img src="screen-shots/Screenshot_1779993835.png" width="180"/></td>
-    <td><img src="screen-shots/Screenshot_1779993813.png" width="180"/></td>
-    <td><img src="screen-shots/Screenshot_1779993880.png" width="180"/></td>
+    <td><img src="/screenshots/Screenshot_1779993835.png" width="180"/></td>
+    <td><img src="/screenshots/Screenshot_1779993813.png" width="180"/></td>
+    <td><img src="/screenshots/Screenshot_1779993880.png" width="180"/></td>
     <td></td>
   </tr>
 </table>
