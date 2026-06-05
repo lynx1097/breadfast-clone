@@ -9,14 +9,17 @@
 
 **A pixel-faithful, production-structured Flutter clone of the real [Breadfast](https://www.breadfast.com/) grocery delivery app.**  
 Built for a Frontend Mobile Development (UI/UX Flutter) university course.
+
+
+> [!NOTE]
+> Not a mockup means this app is a real app not an HTML/CSS look-alike , but its still a Breadfast mockup with no real buying functions or real wallets , the accounts and database retrieved content is real though (firebase) .
+
 <p align="center">
     <a href="https://lynx1097.github.io/breadfast-clone/">
       <img src="screenshots/Try.png" width="80%">
     </a>
 </p>
-> [!NOTE]
->
-> Not a mockup means this app is a real app not an HTML/CSS look-alike , but its still a Breadfast mockup with no real buying functions or real wallets , the accounts and database retrieved content is real though (firebase) .
+
 
 <br/>
 
