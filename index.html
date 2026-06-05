@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Breadfast Clone</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { height: 100%; background: #05070f; }
+
+    body {
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 5px;
+      overflow: hidden;
+      background: transparent;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    /* ═══════════════════════════════════════════
+       AURORA BACKGROUND
+    ═══════════════════════════════════════════ */
+
+    .aurora {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background: #05070f;
+      pointer-events: none;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      will-change: transform;
+    }
+
+    .blob-1 {
+      width: 720px; height: 520px;
+      background: radial-gradient(circle at 40% 40%, #4338ca 0%, transparent 65%);
+      filter: blur(88px);
+      opacity: 0.30;
+      top: -12%; left: -8%;
+      animation: drift-a 30s ease-in-out infinite;
+    }
+    .blob-2 {
+      width: 660px; height: 620px;
+      background: radial-gradient(circle at 55% 55%, #0891b2 0%, transparent 65%);
+      filter: blur(95px);
+      opacity: 0.24;
+      bottom: -18%; right: -6%;
+      animation: drift-b 24s ease-in-out infinite;
+    }
+    .blob-3 {
+      width: 560px; height: 460px;
+      background: radial-gradient(circle at 50% 50%, #7c3aed 0%, transparent 65%);
+      filter: blur(80px);
+      opacity: 0.20;
+      top: 22%; right: 12%;
+      animation: drift-c 38s ease-in-out infinite;
+    }
+    .blob-4 {
+      width: 420px; height: 380px;
+      background: radial-gradient(circle at 50% 50%, #c2185b 0%, transparent 65%);
+      filter: blur(75px);
+      opacity: 0.14;
+      bottom: 8%; left: 8%;
+      animation: drift-a 44s ease-in-out infinite reverse;
+    }
+
+    /* Subtle dot grid overlay */
+    .aurora-grid {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px);
+      background-size: 32px 32px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+    }
+
+    @keyframes drift-a {
+      0%, 100% { transform: translate(0px,   0px); }
+      25%       { transform: translate(55px,  38px); }
+      50%       { transform: translate(28px, -48px); }
+      75%       { transform: translate(-38px, 28px); }
+    }
+    @keyframes drift-b {
+      0%, 100% { transform: translate(0px,   0px); }
+      25%       { transform: translate(-50px, -32px); }
+      50%       { transform: translate(-18px,  58px); }
+      75%       { transform: translate( 58px, -18px); }
+    }
+    @keyframes drift-c {
+      0%, 100% { transform: translate(0px,  0px) rotate(0deg);   }
+      33%       { transform: translate(-38px, 48px) rotate(55deg); }
+      66%       { transform: translate( 48px,-38px) rotate(110deg);}
+    }
+
+    /* ═══════════════════════════════════════════
+       SIDE PANEL (DESKTOP)
+    ═══════════════════════════════════════════ */
+
+    .label {
+      color: rgba(255,255,255,0.4);
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .side-panel {
+      position: absolute;
+      right: calc(50% + 170px);
+      top: 50%;
+      transform: translateY(-50%);
+      width: 210px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 16px;
+      padding: 20px;
+      color: rgba(255,255,255,0.65);
+      font-size: 12.5px;
+      line-height: 1.75;
+      z-index: 10;
+      backdrop-filter: blur(16px) saturate(1.4);
+      -webkit-backdrop-filter: blur(16px) saturate(1.4);
+    }
+
+    .side-panel section { margin-bottom: 14px; }
+    .side-panel section:last-child { margin-bottom: 0; }
+
+    .side-panel h3 {
+      color: rgba(255,255,255,0.5);
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 5px;
+    }
+
+    .side-panel p {
+      color: rgba(255,255,255,0.72);
+      font-size: 12.5px;
+    }
+
+    .side-panel strong {
+      color: rgba(255,255,255,0.95);
+      font-weight: 500;
+    }
+
+    /* Drawer header — hidden on desktop */
+    .drawer-header { display: none; }
+    .drawer-handle  { display: none; }
+
+    /* Mobile elements hidden by default */
+    .overlay        { display: none; }
+    .drawer-toggle  { display: none; }
+
+    /* ═══════════════════════════════════════════
+       PHONE MOCKUP
+    ═══════════════════════════════════════════ */
+
+    .phone {
+      position: relative;
+      z-index: 5;
+      width: 300px;
+      height: 585px;
+      background: #1c1c1e;
+      border-radius: 15px;
+      box-shadow:
+        0 0 0 1.5px #3a3a3c,
+        0 0 0 3px #1c1c1e,
+        0 0 0 4.5px #3a3a3c,
+        0 50px 120px rgba(0,0,0,0.8),
+        inset 0 0 0 1px rgba(255,255,255,0.06);
+      transform-origin: top center;
+    }
+
+    .phone::before {
+      content: '';
+      position: absolute;
+      right: -5px; top: 160px;
+      width: 4px; height: 70px;
+      background: #3a3a3c;
+      border-radius: 0 3px 3px 0;
+      box-shadow: 0 90px 0 #3a3a3c;
+    }
+    .phone::after {
+      content: '';
+      position: absolute;
+      left: -5px; top: 120px;
+      width: 4px; height: 40px;
+      background: #3a3a3c;
+      border-radius: 3px 0 0 3px;
+      box-shadow: 0 58px 0 #3a3a3c, 0 112px 0 #3a3a3c;
+    }
+
+    .screen {
+      position: absolute;
+      inset: 0;
+      background: #000;
+      border-radius: 15px;
+      overflow: hidden;
+    }
+
+    .app-frame {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 15px;
+      transform: scale(0.97);
+    }
+
+    /* ═══════════════════════════════════════════
+       MOBILE  (≤ 768px)
+    ═══════════════════════════════════════════ */
+
+    @media (max-width: 768px) {
+
+      body {
+        padding: 0;
+        flex-direction: column;
+        align-items: stretch;
+        height: 100vh;
+        height: 100dvh;
+        min-height: unset;
+        overflow: hidden;
+      }
+
+      /* Aurora hidden — iframe fills the screen anyway */
+      .aurora { display: none; }
+
+      /* Phone becomes full-screen */
+      .phone {
+        flex: 1;
+        width: 100%;
+        height: auto;
+        border-radius: 0;
+        box-shadow: none;
+      }
+      .phone::before, .phone::after { display: none; }
+      .screen     { border-radius: 0; }
+      .app-frame  { transform: none; border-radius: 0; }
+
+      /* ── Bottom drawer ── */
+      .side-panel {
+        position: fixed;
+        inset: auto 0 0 0;
+        width: 100%;
+        transform: translateY(102%);
+        transition: transform 0.38s cubic-bezier(0.32, 0.72, 0, 1);
+        border-radius: 22px 22px 0 0;
+        padding: 0 24px 40px;
+        z-index: 60;
+        background: rgba(10, 10, 22, 0.88);
+        backdrop-filter: blur(22px) saturate(1.5);
+        -webkit-backdrop-filter: blur(22px) saturate(1.5);
+        max-height: 70vh;
+        overflow-y: auto;
+      }
+      .side-panel.open { transform: translateY(0); }
+
+      .drawer-handle {
+        display: block;
+        width: 38px; height: 4px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 2px;
+        margin: 14px auto 0;
+        flex-shrink: 0;
+      }
+
+      .drawer-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 0 12px;
+        margin-bottom: 8px;
+        border-bottom: 1px solid rgba(255,255,255,0.07);
+      }
+      .drawer-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: rgba(255,255,255,0.9);
+        letter-spacing: 0.01em;
+      }
+      .drawer-close {
+        appearance: none;
+        -webkit-appearance: none;
+        background: rgba(255,255,255,0.08);
+        border: none;
+        color: rgba(255,255,255,0.65);
+        font-size: 14px;
+        cursor: pointer;
+        width: 28px; height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .side-panel section { margin-bottom: 16px; }
+
+      /* ── Dimming overlay ── */
+      .overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: transparent;
+        z-index: 55;
+        pointer-events: none;
+        transition: background 0.38s;
+      }
+      .overlay.active {
+        background: rgba(0,0,0,0.58);
+        pointer-events: all;
+      }
+
+      /* ── Floating info button ── */
+      .drawer-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        bottom: 40px; right: 20px;
+        z-index: 50;
+        width: 46px; height: 46px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.09);
+        border: 1px solid rgba(32, 25, 25, 0.882);
+        color: rgba(153, 48, 48, 0.85);
+        font-size: 25px;
+        font-weight: 700;
+        font-style: bold;
+        cursor: pointer;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        transition: background 0.18s, transform 0.15s;
+        -webkit-tap-highlight-color: transparent;
+        letter-spacing: -0.02em;
+      }
+      .drawer-toggle:active {
+        transform: scale(0.88);
+        background: rgba(160, 77, 77, 0.689);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Aurora background (desktop only) -->
+  <div class="aurora" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="blob blob-4"></div>
+    <div class="aurora-grid"></div>
+  </div>
+
+  <!-- Mobile: dimming overlay + floating info button -->
+  <div class="overlay" id="overlay" onclick="closeDrawer()"></div>
+  <button class="drawer-toggle" onclick="openDrawer()" aria-label="Show app info">i</button>
+
+  <!-- Side panel (desktop) / Bottom drawer (mobile) -->
+  <div class="side-panel" id="sidePanel">
+    <div class="drawer-handle" aria-hidden="true"></div>
+    <div class="drawer-header">
+      <span class="drawer-title">App Info</span>
+      <button class="drawer-close" onclick="closeDrawer()" aria-label="Close">✕</button>
+    </div>
+
+    <section>
+      <h3>Sign Up</h3>
+      <p>You can sign up then login with your phone number — no OTP required.</p>
+    </section>
+
+    <section>
+      <h3>Log In — Test user (Consistent across page reloads)</h3>
+      <p>
+        Phone: <strong>1234567890</strong><br>
+        Password: <strong>123456</strong>
+      </p>
+    </section>
+  </div>
+
+  <!-- Phone mockup -->
+  <div class="phone">
+    <div class="screen">
+      <iframe
+        class="app-frame"
+        src="./web/index.html"
+        title="Breadfast Clone"
+        allow="camera; microphone; notifications"
+      ></iframe>
+    </div>
+  </div>
+
+  <script>
+    function openDrawer() {
+      document.getElementById('sidePanel').classList.add('open');
+      document.getElementById('overlay').classList.add('active');
+    }
+    function closeDrawer() {
+      document.getElementById('sidePanel').classList.remove('open');
+      document.getElementById('overlay').classList.remove('active');
+    }
+  </script>
+</body>
+</html>

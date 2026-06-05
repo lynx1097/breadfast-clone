@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -57,6 +54,16 @@ class DefaultFirebaseOptions {
     appId: '1:560307750123:android:e6bdbfe7c2d95ad68c6aae',
     messagingSenderId: '560307750123',
     projectId: 'breadfast-giu',
+    databaseURL: 'https://breadfast-giu-default-rtdb.firebaseio.com',
+    storageBucket: 'breadfast-giu.firebasestorage.app',
+  );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyBammvX7kdyiebo6fRzBCFfyNhblG7Ls2M',
+    appId: '1:560307750123:web:d9a9d950d737ea3f8c6aae',
+    messagingSenderId: '560307750123',
+    projectId: 'breadfast-giu',
+    authDomain: 'breadfast-giu.firebaseapp.com',
     databaseURL: 'https://breadfast-giu-default-rtdb.firebaseio.com',
     storageBucket: 'breadfast-giu.firebasestorage.app',
   );
